@@ -22,48 +22,53 @@ void setup()
   ESP8266.begin(9600);
   ESP8266.setTimeout(1000);
 
-  while(!Serial);
-  while(!ESP8266);
-  Serial.println("ESP8266 Demo on UNO");
+  Serial.println(" ");
+  Serial.println("                     ...");
+  Serial.println(" ");
+  Serial.println("          ESP8266-01 Module Test Code");
+  Serial.println(" ");
+  Serial.println("                     ...");
+  Serial.println("");
+  Serial.println("");
+  delay(2000);
+  Serial.println("....Initializing Module Connection Sequence....");
+  Serial.println("                     ...");
+  Serial.println(" ");
+  Serial.println(" ");
+  delay(2000);
 
-  while(ESP8266.available() > 0)
+  // Test if the module is ready:
+  ESP8266.println("AT+RST");
+  Serial.println("Trying to reset ESP8266 module...");
+  ESP8266.flush();
+  if(ESP8266.find("OK"))
   {
-    ESP8266.read();
-    delay(1000);
-    // Test if the module is ready:
-    ESP8266.println("AT+RST");
-    Serial.println("Resetting module");
-    ESP8266.flush();
-
-    if(ESP8266.find("Ready")||ESP8266.find("ready"))
-    {
-      Serial.println("Module is ready");
-    }
-    else
-    {
-      Serial.println("Module have no response.");
-      while(1);
-    }
-    delay(1000);
-
-    //Connect to the WiFi:
-    boolean connected=false;
-    for(int i=0;i<5;i++)
-    {
-      if(connectWiFi())
-      {
-        connected = true;
-        break;
-      }
-    }
-    if (!connected)
-    {
-      while(1);
-    }
-    delay(5000);
-    // Set the single connection mode:
-    ESP8266.println("AT+CIPMUX=0");
+    Serial.println("Module is ready.");
   }
+  else
+  {
+    Serial.println("Module have no response.");
+    while(1);
+  }
+  delay(5000);
+
+  //Connect to the WiFi:
+  boolean connected=false;
+  for(int i=0;i<5;i++)
+  {
+    if(connectWiFi())
+    {
+      connected = true;
+      break;
+    }
+  }
+  if (!connected)
+  {
+    while(1);
+  }
+  delay(5000);
+  // Set the single connection mode:
+  ESP8266.println("AT+CIPMUX=0");
 }
 
 void loop()
@@ -89,7 +94,7 @@ void loop()
   else
   {
     ESP8266.println("AT+CIPCLOSE");
-    Serial.println("connect timeout");
+    Serial.println("Connection timeout!");
     delay(1000);
     return;
   }
