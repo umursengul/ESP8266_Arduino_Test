@@ -13,7 +13,7 @@
 ////////////////////////////
 #define SSID "<SSID>"
 #define PASS "<Password>"
-#define DST_IP "66.249.93.147" //google.com
+#define PING_IP "66.249.93.147" //google.com
 SoftwareSerial ESP8266(2, 3);
 
 void setup()
@@ -47,7 +47,7 @@ void setup()
   }
   else
   {
-    Serial.println("Module have no response.");
+    Serial.println("Module have no response!");
     while(1);
   }
   delay(5000);
@@ -67,14 +67,16 @@ void setup()
     while(1);
   }
   delay(5000);
+
   // Set the single connection mode:
+  Serial.println("Setting the module for single connection mode.");
   ESP8266.println("AT+CIPMUX=0");
 }
 
 void loop()
 {
   String cmd = "AT+CIPSTART=\"TCP\",\"";
-  cmd += DST_IP;
+  cmd += PING_IP;
   cmd += "\",80";
   ESP8266.println(cmd);
   Serial.println(cmd);
@@ -107,7 +109,7 @@ void loop()
     char c = ESP8266.read();
     Serial.write(c);
 
-    if(c=='\r')
+    if(c == '\r')
     {
       Serial.print('\n');
     }
@@ -120,7 +122,7 @@ void loop()
 boolean connectWiFi()
 {
   ESP8266.println("AT+CWMODE=1");
-  String cmd="AT+CWJAP=\"";
+  String cmd = "AT+CWJAP=\"";
   cmd += SSID;
   cmd += "\",\"";
   cmd += PASS;
